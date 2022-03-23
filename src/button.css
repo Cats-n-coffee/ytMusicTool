@@ -1,0 +1,12 @@
+button {
+  padding: 10px 15px;
+  background: greenyellow;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  box-shadow: 5px 5px 10px rgb(148, 147, 147);
+}
+
+button:hover {
+  background: rgb(132, 197, 35);
+}
