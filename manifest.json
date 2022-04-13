@@ -2,19 +2,22 @@
   "name": "YT Tool",
   "description": "Build an Extension!",
   "version": "1.0",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "background": {
-    "service_worker": "src/background.js"
+    "scripts": ["src/background.js"]
   },
-  "permissions": ["storage", "activeTab", "scripting"],
-  "action": {
-    "default_popup": "src/popup/popup.html",
-    "default_icon": {
-      "16": "src/images/cat-icon-small.png",
-      "32": "src/images/cat-icon-small.png",
-      "48": "src/images/cat-icon-small.png",
-      "128": "src/images/cat-icon-small.png"
-    }
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "browser_action": {
+    "default_icon": "src/images/cat-icon-small.png",
+    "default_title": "ytMusic",
+    "default_popup": "src/popup/popup.html"
   },
   "icons": {
     "16": "src/images/cat-icon-small.png",
@@ -24,7 +27,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.youtube.com/*"],
+      "matches": ["*://*.youtube.com/*"],
       "js": ["src/contentScripts/rewind.js", "src/contentScripts/skipAds.js"]
     }
   ]
