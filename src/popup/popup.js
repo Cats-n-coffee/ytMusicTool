@@ -1,14 +1,7 @@
-let browser;
-
-if (chrome) {
-  browser = chrome;
-} else {
-  browser = browser;
-}
-
 const stopPlayerButton = document.getElementById("stop-player");
 const skipAdsButton = document.getElementById("skip-ads");
 const choiceForm = document.getElementById("choice-form");
+const rewindButton = document.querySelector("#rewind-button");
 
 fetchStorage("rewind", stopPlayerButton, rewindEnabled);
 fetchStorage("skipAdsAuto", skipAdsButton);
@@ -23,21 +16,6 @@ choiceForm.addEventListener("submit", (event) => {
   } else {
     browser.storage.local.set({ rewind: false });
   }
-  if (skipAdsButton.checked) {
-    console.log("skip ads checked");
-    browser.storage.local.set({ skipAdsAuto: true });
-    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    //   chrome.tabs.sendMessage(
-    //     tabs[0].id,
-    //     { message: "skipAdsAuto" },
-    //     (response) => {
-    //       console.log(response);
-    //     }
-    //   );
-    // });
-  } else {
-    browser.storage.local.set({ skipAdsAuto: false });
-  }
 });
 
 // stopPlayerButton.addEventListener("change", (event) => {
@@ -50,10 +28,23 @@ choiceForm.addEventListener("submit", (event) => {
 //   }
 // });
 
+rewindButton.addEventListener("click", () => {
+  console.log("rewind button");
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    console.log("tabs", tabs);
+    for (const tab of tabs) {
+      if (tab.url.includes("https://www.youtube.com/watch")) {
+        chrome.tabs.sendMessage(tab.id, { message: "rewind" }, (response) => {
+          console.log(response);
+        });
+      }
+    }
+  });
+});
+
 async function fetchStorage(key, element, callback) {
   try {
     const store = await browser.storage.local.get([key]);
-    console.log("store", store[key]);
     if (store[key] === true) {
       element.checked = true;
       callback();
@@ -74,21 +65,3 @@ function rewindEnabled() {
     );
   });
 }
-
-// skipAdsButton.addEventListener("change", (event) => {
-//   if (event.target.checked) {
-//     console.log("checked");
-//     chrome.storage.local.set({ skipAdsAuto: true });
-//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//       chrome.tabs.sendMessage(
-//         tabs[0].id,
-//         { message: "skipAdsAuto" },
-//         (response) => {
-//           console.log(response);
-//         }
-//       );
-//     });
-//   } else {
-//     chrome.storage.local.set({ skipAdsAuto: false });
-//   }
-// });

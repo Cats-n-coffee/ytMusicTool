@@ -9,9 +9,7 @@ browser.runtime.onMessage.addListener((request, sender, sendMessage) => {
       const ytSkipAdsButton =
         document.getElementsByClassName("ytp-ad-skip-button")[0];
 
-      console.log("yt button", ytSkipAdsButton);
       intervalCount++;
-      console.log(intervalCount);
       if (ytSkipAdsButton) {
         ytSkipAdsButton.click();
         sendMessage("skipping");

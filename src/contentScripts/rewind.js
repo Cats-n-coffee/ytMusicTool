@@ -2,9 +2,6 @@ const player = document.querySelector("#movie_player");
 const videoTotalTime = document.querySelector(".ytp-time-duration");
 const videoElapasedTime = document.querySelector(".ytp-time-current");
 
-console.log("total", videoTotalTime.textContent);
-console.log("current", videoElapasedTime.textContent);
-
 const keyIsDown = new KeyboardEvent("keydown", {
   key: "0",
   code: "Digit0",
@@ -43,13 +40,28 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     player.dispatchEvent(stopPlayerDOMEvent);
     console.log("inside content stop");
   }
+  if (request.message === "rewind") {
+    const totalTimeStr = videoTotalTime.textContent;
+    const totalTimeArr = totalTimeStr.split(":");
+    const seconds = +totalTimeArr[0] * 60 + +totalTimeArr[1];
+    console.log("rewind message received");
+    console.log("total", totalTimeStr, "seconds", seconds);
+    console.log("current", videoElapasedTime.textContent);
+    console.log(typeof videoTotalTime.textContent);
+  }
 });
 
 const getVideoTotal = () => {
   console.log("inside function", videoTotalTime.textContent);
 };
 
-window.addEventListener("DOMContentLoaded", () => {
+if (document.readyState === "complete") {
+  console.log("total", videoTotalTime.textContent);
+  console.log("current", videoElapasedTime.textContent);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded event");
   while (!videoTotalTime) {
     const ytSkipAdsButton =
       document.getElementsByClassName("ytp-ad-skip-button")[0];
