@@ -41,36 +41,30 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("inside content stop");
   }
   if (request.message === "rewind") {
+    player.dispatchEvent(stopPlayerDOMEvent);
+  }
+  if (request.message === "getTotalTime") {
     const totalTimeStr = videoTotalTime.textContent;
     const totalTimeArr = totalTimeStr.split(":");
     const seconds = +totalTimeArr[0] * 60 + +totalTimeArr[1];
-    console.log("rewind message received");
-    console.log("total", totalTimeStr, "seconds", seconds);
-    console.log("current", videoElapasedTime.textContent);
-    console.log(typeof videoTotalTime.textContent);
+    sendResponse({ response: seconds });
   }
 });
-
-const getVideoTotal = () => {
-  console.log("inside function", videoTotalTime.textContent);
-};
 
 if (document.readyState === "complete") {
   console.log("total", videoTotalTime.textContent);
   console.log("current", videoElapasedTime.textContent);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM loaded event");
-  while (!videoTotalTime) {
-    const ytSkipAdsButton =
-      document.getElementsByClassName("ytp-ad-skip-button")[0];
+// document.addEventListener("DOMContentLoaded", () => {
+//   console.log("DOM loaded event");
+//   while (!videoTotalTime) {
+//     const ytSkipAdsButton =
+//       document.getElementsByClassName("ytp-ad-skip-button")[0];
 
-    if (ytSkipAdsButton) {
-      console.log("skip ads");
-      ytSkipAdsButton.click();
-    }
-  }
-
-  getVideoTotal();
-});
+//     if (ytSkipAdsButton) {
+//       console.log("skip ads");
+//       ytSkipAdsButton.click();
+//     }
+//   }
+// });
